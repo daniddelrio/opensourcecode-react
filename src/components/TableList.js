@@ -23,7 +23,12 @@ class TableList extends React.Component {
                   <td>{col}</td>
                 ))}
                 <td>
-                  <Button variant="secondary" block onClick={this.props.showModal}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    block
+                    onClick={(e) => this.props.showModal(e, person)}
+                  >
                     Edit
                   </Button>
                 </td>

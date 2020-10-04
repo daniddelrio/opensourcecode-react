@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 
 class TableList extends React.Component {
   render() {
+    const data = this.props.data;
     return (
       <Modal show={this.props.isModalShowing} onHide={this.props.closeModal}>
         <Form>
@@ -18,6 +19,7 @@ class TableList extends React.Component {
                 <Form.Control
                   type="text"
                   placeholder={`Enter ${header.name}`}
+                  defaultValue={data ? data[header.value] : ""}
                 />
               </Form.Group>
             ))}

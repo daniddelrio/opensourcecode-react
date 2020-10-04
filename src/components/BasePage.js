@@ -10,6 +10,7 @@ class BasePage extends React.Component {
     this.state = {
       isModalShowing: false,
       isModalEditShowing: false,
+      editData: [],
     };
   }
 
@@ -21,12 +22,12 @@ class BasePage extends React.Component {
     this.setState({ isModalShowing: false });
   };
 
-  showEditModal = (e) => {
-    this.setState({ isModalEditShowing: true });
+  showEditModal = (e, editData) => {
+    this.setState({ isModalEditShowing: true, editData });
   };
 
   closeEditModal = (e) => {
-    this.setState({ isModalEditShowing: false });
+    this.setState({ isModalEditShowing: false, editData: [] });
   };
 
   render() {
@@ -54,6 +55,7 @@ class BasePage extends React.Component {
             isModalShowing={this.state.isModalEditShowing}
             headers={this.props.headers}
             title={`Edit ${this.props.title}`}
+            data={this.state.editData}
           />
           <Button block onClick={this.showModal}>
             {`Add ${this.props.title}`}
