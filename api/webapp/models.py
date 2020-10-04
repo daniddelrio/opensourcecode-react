@@ -13,7 +13,7 @@ class Class(models.Model):
         MaxValueValidator(12),
         MinValueValidator(1)
     ])
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='classes')
 
     def __str__(self):
         return self.number
@@ -29,7 +29,7 @@ class Section(models.Model):
     ]
 
     name = models.CharField(max_length=5, choices=SECTION_CHOICES)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):
         return self.number
