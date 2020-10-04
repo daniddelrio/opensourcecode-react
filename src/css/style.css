@@ -1,0 +1,15 @@
+.main-body {
+	padding: 3rem;
+}
+
+.main-header {
+	text-align: center;
+	color: #333333;
+	font-weight: 600;
+	margin-bottom: 2rem;
+}
+
+.main-table {
+	width: 80%;
+	margin: 0 auto;
+}
