@@ -1,7 +1,7 @@
 import React from "react";
 import BasePage from "../components/BasePage";
 
-class StudentPage extends React.Component {
+class TeacherPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +47,7 @@ class StudentPage extends React.Component {
   render() {
     return (
       <BasePage 
-        title="Student"
+        title="Teacher"
         headers={this.state.headers}
         data={this.state.data}
       />
@@ -55,4 +55,4 @@ class StudentPage extends React.Component {
   }
 }
 
-export default StudentPage;
+export default TeacherPage;

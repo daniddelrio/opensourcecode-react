@@ -1,16 +1,17 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import { Link } from "react-router-dom";
 
 class Navigation extends React.Component {
   render() {
     return (
       <Navbar bg="light" variant="light">
-        <Navbar.Brand href="#home">School Database</Navbar.Brand>
+        <Navbar.Brand><Link to="/">School Database</Link></Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Students</Nav.Link>
-          <Nav.Link href="#pricing">Teachers</Nav.Link>
+          <Nav.Link><Link to="/">Home</Link></Nav.Link>
+          <Nav.Link><Link to="/students">Students</Link></Nav.Link>
+          <Nav.Link><Link to="/teachers">Teachers</Link></Nav.Link>
         </Nav>
       </Navbar>
     );
