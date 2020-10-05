@@ -29,7 +29,7 @@ class Section(models.Model):
     ]
 
     name = models.CharField(max_length=5, choices=SECTION_CHOICES)
-    class_num = models.OneToOneField(Class, on_delete=models.CASCADE, related_name='class+')
+    class_num = models.OneToOneField(Class, on_delete=models.CASCADE, related_name='section')
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):

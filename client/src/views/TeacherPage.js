@@ -47,11 +47,7 @@ class TeacherPage extends React.Component {
 
   async componentDidMount() {
     const teachers = await getTeachers();
-    const data = teachers.data.map(teachers => {
-      const { id, ...teacherData } = teachers;
-      return { ...teacherData };
-    });
-    console.log(data);
+    const data = teachers.data;
     this.setState({ data });
   }
 

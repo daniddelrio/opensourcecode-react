@@ -28,16 +28,6 @@ class ClassSerializer(serializers.ModelSerializer):
 class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
-        fields = ['id', 'name', 'teacher']
-
-class SectionSerializer(serializers.ModelSerializer):
-    class_num = serializers.SerializerMethodField('get_class_num', read_only=True)
-
-    def get_class_num(self, obj):
-        return obj.class_num.number
-
-    class Meta:
-        model = Section
         fields = ['id', 'name', 'teacher', 'class_num']
 
 class SectionCreateSerializer(serializers.ModelSerializer):

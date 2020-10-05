@@ -4,11 +4,7 @@ from webapp.serializers import *
 
 class ClassList(generics.ListCreateAPIView):
     queryset = Class.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return ClassCreateSerializer
-        return ClassSerializer
+    serializer_class = ClassSerializer
 
 class ClassDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Class.objects.all()

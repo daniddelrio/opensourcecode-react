@@ -2,8 +2,14 @@ import React from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import ModalDetails from "../components/ModalDetails";
+import { deleteTeacher } from "../services/teachers";
 
 class TableList extends React.Component {
+  handleDelete = async (e, id) => {
+    await deleteTeacher(id);
+    window.location.reload();
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -19,8 +25,8 @@ class TableList extends React.Component {
           <tbody>
             {this.props.data.map((person) => (
               <tr>
-                {Object.values(person).map((col) => (
-                  <td>{Array.isArray(col) ? col.map(c => c.name || c.number).join("\n") : col}</td>
+                {Object.entries(person).map((col) => (
+                  col[0] !== "id" && <td>{Array.isArray(col[1]) ? col[1].map(c => c.name || c.number).join("\n") : col[1]}</td>
                 ))}
                 <td>
                   <Button
@@ -30,6 +36,14 @@ class TableList extends React.Component {
                     onClick={(e) => this.props.showModal(e, person)}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    block
+                    onClick={(e) => this.handleDelete(e, person.id)}
+                  >
+                    Delete
                   </Button>
                 </td>
               </tr>
