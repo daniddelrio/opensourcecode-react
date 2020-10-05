@@ -45,10 +45,7 @@ class StudentPage extends React.Component {
 
   async componentDidMount() {
     const students = await getStudents();
-    const data = students.data.map(student => {
-      const { id, ...studentData } = student;
-      return { ...studentData };
-    });
+    const data = students.data;
     this.setState({ data });
   }
 

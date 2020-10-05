@@ -2,20 +2,6 @@ from webapp.models import *
 from rest_framework import serializers
 
 class StudentSerializer(serializers.ModelSerializer):
-    class_num = serializers.SerializerMethodField('get_class_num', read_only=True)
-    section = serializers.SerializerMethodField('get_section', read_only=True)
-
-    def get_class_num(self, obj):
-        return obj.class_num.number
-
-    def get_section(self, obj):
-        return obj.section.name
-
-    class Meta:
-        model = Student
-        fields = ['id', 'name', 'roll_number', 'class_num', 'section']
-
-class StudentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['id', 'name', 'roll_number', 'class_num', 'section']

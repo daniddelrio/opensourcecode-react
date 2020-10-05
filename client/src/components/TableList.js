@@ -3,12 +3,14 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import ModalDetails from "../components/ModalDetails";
 import { deleteTeacher } from "../services/teachers";
+import { deleteStudent } from "../services/students";
 
 class TableList extends React.Component {
   handleDelete = async (e, id) => {
-    await deleteTeacher(id);
+    if(this.props.isTeacher) await deleteTeacher(id);
+    else await deleteStudent(id);
     window.location.reload();
-  }
+  };
 
   render() {
     return (
@@ -25,9 +27,16 @@ class TableList extends React.Component {
           <tbody>
             {this.props.data.map((person) => (
               <tr>
-                {Object.entries(person).map((col) => (
-                  col[0] !== "id" && <td>{Array.isArray(col[1]) ? col[1].map(c => c.name || c.number).join("\n") : col[1]}</td>
-                ))}
+                {Object.entries(person).map(
+                  (col) =>
+                    col[0] !== "id" && (
+                      <td>
+                        {Array.isArray(col[1])
+                          ? col[1].map((c) => c.name || c.number).join("\n")
+                          : col[1]}
+                      </td>
+                    )
+                )}
                 <td>
                   <Button
                     size="sm"

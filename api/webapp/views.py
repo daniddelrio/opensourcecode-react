@@ -20,19 +20,11 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class StudentList(generics.ListCreateAPIView):
     queryset = Student.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return StudentCreateSerializer
-        return StudentSerializer
+    serializer_class = StudentSerializer
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'PUT':
-            return StudentCreateSerializer
-        return StudentSerializer
+    serializer_class = StudentSerializer
 
 class TeacherList(generics.ListCreateAPIView):
     queryset = Teacher.objects.all()

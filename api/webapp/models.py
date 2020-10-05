@@ -18,16 +18,16 @@ class Class(models.Model):
     def __str__(self):
         return str(self.number)
 
-class Section(models.Model):
-    SECTION_CHOICES = [
-        ('A', 'A'),
-        ('B', 'B'),
-        ('C', 'C'),
-        ('D', 'D'),
-        ('E', 'E'),
-        ('F', 'F'),
-    ]
+SECTION_CHOICES = [
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+    ('D', 'D'),
+    ('E', 'E'),
+    ('F', 'F'),
+]
 
+class Section(models.Model):
     name = models.CharField(max_length=5, choices=SECTION_CHOICES)
     class_num = models.OneToOneField(Class, on_delete=models.CASCADE, related_name='section')
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='sections')
@@ -38,8 +38,13 @@ class Section(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=255)
     roll_number = models.IntegerField()
-    class_num = models.ForeignKey(Class, on_delete=models.CASCADE)
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    class_num = models.IntegerField(validators=[
+        MaxValueValidator(12),
+        MinValueValidator(1)
+    ])
+    section = models.CharField(max_length=5, choices=SECTION_CHOICES)
+    # class_num = models.ForeignKey(Class, on_delete=models.CASCADE)
+    # section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

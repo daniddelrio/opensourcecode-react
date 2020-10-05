@@ -1,6 +1,7 @@
 import React from "react";
 import TableList from "../components/TableList";
 import ModalDetails from "../components/ModalDetails";
+import ModalStudentDetails from "../components/ModalStudentDetails";
 import Button from "react-bootstrap/Button";
 import "../css/style.css";
 
@@ -44,26 +45,53 @@ class BasePage extends React.Component {
             showModal={this.showEditModal}
             closeModal={this.closeEditModal}
             isModalShowing={this.state.isModalEditShowing}
+            isTeacher={this.props.title == "Teacher"}
           />
-          <ModalDetails
-            showModal={this.showModal}
-            closeModal={this.closeModal}
-            isModalShowing={this.state.isModalShowing}
-            headers={this.props.headers}
-            title={`Add ${this.props.title}`}
-            key="Add Modal"
-          />
-          <ModalDetails
-            showModal={this.showEditModal}
-            closeModal={this.closeEditModal}
-            isModalShowing={this.state.isModalEditShowing}
-            isEditing
-            headers={this.props.headers}
-            title={`Edit ${this.props.title}`}
-            data={this.state.editData}
-            key="Edit Modal"
-            ref={this.modalChild}
-          />
+          {this.props.title == "Teacher" ? (
+            <React.Fragment>
+              <ModalDetails
+                showModal={this.showModal}
+                closeModal={this.closeModal}
+                isModalShowing={this.state.isModalShowing}
+                headers={this.props.headers}
+                title={`Add ${this.props.title}`}
+                key="Add Modal"
+              />
+              <ModalDetails
+                showModal={this.showEditModal}
+                closeModal={this.closeEditModal}
+                isModalShowing={this.state.isModalEditShowing}
+                isEditing
+                headers={this.props.headers}
+                title={`Edit ${this.props.title}`}
+                data={this.state.editData}
+                key="Edit Modal"
+                ref={this.modalChild}
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <ModalStudentDetails
+                showModal={this.showModal}
+                closeModal={this.closeModal}
+                isModalShowing={this.state.isModalShowing}
+                headers={this.props.headers}
+                title={`Add ${this.props.title}`}
+                key="Add Modal"
+              />
+              <ModalStudentDetails
+                showModal={this.showEditModal}
+                closeModal={this.closeEditModal}
+                isModalShowing={this.state.isModalEditShowing}
+                isEditing
+                headers={this.props.headers}
+                title={`Edit ${this.props.title}`}
+                data={this.state.editData}
+                key="Edit Modal"
+                ref={this.modalChild}
+              />
+            </React.Fragment>
+          )}
           <Button block onClick={this.showModal}>
             {`Add ${this.props.title}`}
           </Button>
