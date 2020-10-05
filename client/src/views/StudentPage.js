@@ -1,5 +1,6 @@
 import React from "react";
 import BasePage from "../components/BasePage";
+import { getStudents, createStudent } from "../services/students";
 
 class StudentPage extends React.Component {
   constructor(props) {
@@ -8,40 +9,56 @@ class StudentPage extends React.Component {
       headers: [
         {
           name: "Name",
+          value: "name",
+          type: "text",
         },
         {
           name: "Roll #",
+          value: "roll_number",
+          type: "number",
         },
         {
           name: "Class",
+          value: "class_num",
+          type: "number",
         },
         {
           name: "Section",
+          value: "section",
+          type: "select",
+          options: [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+          ]
         },
       ],
-      data: [
-        {
-          name: "Juan Dela Cruz",
-          rollNumber: 2,
-          class: 4,
-          section: "A",
-        },
-        {
-          name: "Juana Dela Cruz",
-          rollNumber: 4,
-          class: 2,
-          section: "C",
-        },
-        {
-          name: "John Doe",
-          rollNumber: 2,
-          class: 8,
-          section: "C",
-        },
-      ],
+      data: [],
+      err: "",
       isModalShowing: false,
       isModalEditShowing: false,
     };
+  }
+
+  async componentDidMount() {
+    const students = await getStudents();
+    const data = students.data.map(student => {
+      const { id, ...studentData } = student;
+      return { ...studentData };
+    });
+    this.setState({ data });
+  }
+
+  handleAdd = async (payload) => {
+    try {
+      const students = await createStudent(payload);
+    }
+    catch(err) {
+      this.setState({ err });
+    }
   }
 
   render() {
@@ -50,6 +67,7 @@ class StudentPage extends React.Component {
         title="Student"
         headers={this.state.headers}
         data={this.state.data}
+        err={this.state.err}
       />
     );
   }

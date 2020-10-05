@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import TeacherModalFields from "./TeacherModalFields";
 
 class TableList extends React.Component {
   render() {
@@ -13,16 +14,7 @@ class TableList extends React.Component {
             <Modal.Title>{this.props.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {this.props.headers.map((header) => (
-              <Form.Group controlId={header.name}>
-                <Form.Label>{header.name}</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={`Enter ${header.name}`}
-                  defaultValue={data ? data[header.value] : ""}
-                />
-              </Form.Group>
-            ))}
+            <TeacherModalFields isEditing={this.props.isEditing} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.props.closeModal}>

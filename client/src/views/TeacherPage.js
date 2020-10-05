@@ -1,5 +1,6 @@
 import React from "react";
 import BasePage from "../components/BasePage";
+import { getTeachers, createTeacher } from "../services/teachers";
 
 class TeacherPage extends React.Component {
   constructor(props) {
@@ -8,40 +9,59 @@ class TeacherPage extends React.Component {
       headers: [
         {
           name: "Name",
+          value: "name",
+          type: "text",
         },
         {
-          name: "Roll #",
+          name: "Teacher ID",
+          value: "teacher_id",
+          type: "text",
         },
         {
           name: "Class",
+          value: "class_num",
+          type: "number",
+          mainField: "number",
         },
         {
           name: "Section",
+          value: "section",
+          type: "select",
+          mainField: "name",
+          options: [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+          ]
         },
       ],
-      data: [
-        {
-          name: "Juan Dela Cruz",
-          rollNumber: 2,
-          class: 4,
-          section: "A",
-        },
-        {
-          name: "Juana Dela Cruz",
-          rollNumber: 4,
-          class: 2,
-          section: "C",
-        },
-        {
-          name: "John Doe",
-          rollNumber: 2,
-          class: 8,
-          section: "C",
-        },
-      ],
+      data: [],
+      err: "",
       isModalShowing: false,
       isModalEditShowing: false,
     };
+  }
+
+  async componentDidMount() {
+    const teachers = await getTeachers();
+    const data = teachers.data.map(teachers => {
+      const { id, ...teacherData } = teachers;
+      return { ...teacherData };
+    });
+    console.log(data);
+    this.setState({ data });
+  }
+
+  handleAdd = async (payload) => {
+    try {
+      const teachers = await createTeacher(payload);
+    }
+    catch(err) {
+      this.setState({ err });
+    }
   }
 
   render() {

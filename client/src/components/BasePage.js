@@ -35,6 +35,7 @@ class BasePage extends React.Component {
       <div class="main-body">
         <h1 class="main-header">{this.props.title}</h1>
         <div class="main-table">
+          {this.props.err && <span>{this.props.err}</span>}
           <TableList
             headers={this.props.headers}
             data={this.props.data}
@@ -53,6 +54,7 @@ class BasePage extends React.Component {
             showModal={this.showEditModal}
             closeModal={this.closeEditModal}
             isModalShowing={this.state.isModalEditShowing}
+            isEditing
             headers={this.props.headers}
             title={`Edit ${this.props.title}`}
             data={this.state.editData}

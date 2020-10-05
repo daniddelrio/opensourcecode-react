@@ -18,3 +18,17 @@
 	padding-top: 3rem;
 	text-align: center;
 }
+
+td {
+	white-space: pre;
+}
+
+@media screen and (max-width: 425px) {
+	.main-body {
+		padding: 1.5rem;
+	}
+
+	.main-table {
+		width: 100%;
+	}
+}

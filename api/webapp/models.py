@@ -16,7 +16,7 @@ class Class(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='classes')
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 class Section(models.Model):
     SECTION_CHOICES = [
@@ -29,10 +29,11 @@ class Section(models.Model):
     ]
 
     name = models.CharField(max_length=5, choices=SECTION_CHOICES)
+    class_num = models.OneToOneField(Class, on_delete=models.CASCADE, related_name='class+')
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):
-        return self.number
+        return self.name
 
 class Student(models.Model):
     name = models.CharField(max_length=255)

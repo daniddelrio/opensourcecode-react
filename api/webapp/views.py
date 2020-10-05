@@ -4,7 +4,11 @@ from webapp.serializers import *
 
 class ClassList(generics.ListCreateAPIView):
     queryset = Class.objects.all()
-    serializer_class = ClassSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return ClassCreateSerializer
+        return ClassSerializer
 
 class ClassDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Class.objects.all()
@@ -20,11 +24,19 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class StudentList(generics.ListCreateAPIView):
     queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return StudentCreateSerializer
+        return StudentSerializer
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return StudentCreateSerializer
+        return StudentSerializer
 
 class TeacherList(generics.ListCreateAPIView):
     queryset = Teacher.objects.all()

@@ -7,7 +7,7 @@ class TableList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
           <thead>
             <tr>
               {this.props.headers.map((header) => (
@@ -20,7 +20,7 @@ class TableList extends React.Component {
             {this.props.data.map((person) => (
               <tr>
                 {Object.values(person).map((col) => (
-                  <td>{col}</td>
+                  <td>{Array.isArray(col) ? col.map(c => c.name || c.number).join("\n") : col}</td>
                 ))}
                 <td>
                   <Button
