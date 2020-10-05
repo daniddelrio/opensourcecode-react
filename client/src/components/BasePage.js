@@ -12,6 +12,7 @@ class BasePage extends React.Component {
       isModalEditShowing: false,
       editData: [],
     };
+    this.modalChild = React.createRef();
   }
 
   showModal = (e) => {
@@ -22,8 +23,9 @@ class BasePage extends React.Component {
     this.setState({ isModalShowing: false });
   };
 
-  showEditModal = (e, editData) => {
-    this.setState({ isModalEditShowing: true, editData });
+  showEditModal = async (e, editData) => {
+    await this.setState({ isModalEditShowing: true, editData });
+    this.modalChild.current.updateState();
   };
 
   closeEditModal = (e) => {
@@ -49,6 +51,7 @@ class BasePage extends React.Component {
             isModalShowing={this.state.isModalShowing}
             headers={this.props.headers}
             title={`Add ${this.props.title}`}
+            key="Add Modal"
           />
           <ModalDetails
             showModal={this.showEditModal}
@@ -58,6 +61,8 @@ class BasePage extends React.Component {
             headers={this.props.headers}
             title={`Edit ${this.props.title}`}
             data={this.state.editData}
+            key="Edit Modal"
+            ref={this.modalChild}
           />
           <Button block onClick={this.showModal}>
             {`Add ${this.props.title}`}

@@ -1,14 +1,22 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
-import TeacherModalFields from "./TeacherModalFields";
 import Col from "react-bootstrap/Col";
-import { createTeacher, deleteTeacher, updateTeacher } from "../services/teachers";
-import { createClass, updateClass } from "../services/classes";
-import { createSection, updateSection } from "../services/sections";
+import {
+  createTeacher,
+  deleteTeacher,
+  updateTeacher,
+} from "../services/teachers";
+import { createClass, updateClass, deleteClass } from "../services/classes";
+import {
+  createSection,
+  updateSection,
+  deleteSection,
+} from "../services/sections";
 
-const ClassRow = (idx, data, state, handleChange) => (
+const ClassRow = (idx, data, state, handleChange, handleDeleteClass) => (
   <Form.Row>
     <Form.Group as={Col} controlId="Class" key={"class" + idx}>
       <Form.Label>Class</Form.Label>
@@ -46,6 +54,7 @@ const ClassRow = (idx, data, state, handleChange) => (
       class="close"
       aria-label="Close"
       style={{ paddingTop: "0.5rem", paddingLeft: "0.5rem" }}
+      onClick={(e) => handleDeleteClass(e, idx)}
     >
       <span aria-hidden="true">&times;</span>
     </button>
@@ -60,33 +69,24 @@ class ModalDetails extends React.Component {
       name: "",
       teacherId: "",
       classSections: [],
+      message: "",
     };
   }
 
   componentDidMount() {
     if (!this.props.isEditing)
       this.setState({
-        classList: [ClassRow(0, this.props.data, this.state, this.handleClass)],
+        classList: [
+          ClassRow(
+            0,
+            this.props.data,
+            this.state,
+            this.handleClass,
+            this.handleDeleteClass
+          ),
+        ],
         classSections: [{ class: "1", section: "A" }],
       });
-    else {
-      const currClasses = this.props.data.classes;
-      const currSections = this.props.data.sections;
-      console.log(this.props.data)
-
-      const refactoredData = currClasses && currSections && currClasses.map(c => ({
-        class: c.number,
-        classId: c.id,
-        section: currSections(s => s.class_num === c.id).name,
-        sectionId: currSections(s => s.class_num === c.id).id,
-        isDeleted: false,
-      }))
-
-      this.setState({
-        classList: [ClassRow(0, refactoredData, this.state, this.handleClass)],
-        classSections: refactoredData,
-      });
-    }
   }
 
   handleClick = (e) => {
@@ -96,12 +96,13 @@ class ModalDetails extends React.Component {
           this.state.classList.length,
           this.props.data,
           this.state,
-          this.handleClass
+          this.handleClass,
+          this.handleDeleteClass
         )
       ),
-      classSections: [
-        this.state.classSections.concat({ class: "1", section: "A" }),
-      ],
+      classSections: this.state.classSections.concat([
+        { class: "1", section: "A" },
+      ]),
     });
   };
 
@@ -109,7 +110,35 @@ class ModalDetails extends React.Component {
     this.setState({ [key]: e.target.value });
   };
 
-  handleClass = (e, key, idx) => {
+  handleDeleteClass = (e, idx) => {
+    const items = this.state.classSections;
+
+    if (items.length == 1) {
+      this.setState({ message: "Teachers must have at least one class!" });
+    } else {
+      // Existing class or section
+      if (items[idx].classId) {
+        this.setState({
+          classSections: [
+            ...items.slice(0, idx),
+            {
+              ...items[idx],
+              isDeleted: true,
+            },
+            ...items.slice(idx + 1),
+          ],
+          classList: [...this.state.classList.splice(idx, 1)],
+        });
+      } else {
+        this.setState({
+          classSections: [...items.splice(idx, 1)],
+          classList: [...this.state.classList.splice(idx, 1)],
+        });
+      }
+    }
+  };
+
+  handleClass = (e, item, idx) => {
     const items = this.state.classSections;
 
     this.setState({
@@ -117,7 +146,7 @@ class ModalDetails extends React.Component {
         ...items.slice(0, idx),
         {
           ...items[idx],
-          [key]: e.target.value,
+          [item]: e.target.value,
         },
         ...items.slice(idx + 1),
       ],
@@ -133,14 +162,19 @@ class ModalDetails extends React.Component {
 
     const teacherId = teacher.data.id;
     const classes = await Promise.all(
-      this.state.classSections.map(
-        async (curr) => {
-          const newClass = await createClass({ number: curr.class, teacher: teacherId });
-          const section = await createSection({ name: curr.section, class_num: newClass.data.id, teacher: teacherId });
+      this.state.classSections.map(async (curr) => {
+        const newClass = await createClass({
+          number: curr.class,
+          teacher: teacherId,
+        });
+        const section = await createSection({
+          name: curr.section,
+          class_num: newClass.data.id,
+          teacher: teacherId,
+        });
 
-          return { class: newClass, section };
-        }
-      )
+        return { class: newClass, section };
+      })
     );
 
     window.location.reload();
@@ -155,17 +189,72 @@ class ModalDetails extends React.Component {
 
     const teacherId = teacher.data.id;
     const classes = await Promise.all(
-      this.state.classSections.map(
-        async (curr) => {
-          const newClass = await createClass({ number: curr.class, teacher: teacherId });
-          const section = await createSection({ name: curr.section, class_num: newClass.data.id, teacher: teacherId });
-
-          return { class: newClass, section };
+      this.state.classSections.map(async (curr) => {
+        let finalClass, finalSection;
+        if (curr.classId) {
+          if (curr.isDeleted) {
+            finalClass = await deleteClass(curr.classId);
+            finalSection = await deleteSection(curr.sectionId);
+          } else {
+            finalClass = await updateClass(curr.classId, {
+              teacher: teacherId,
+              number: curr.class,
+            });
+            finalSection = await updateSection(curr.sectionId, {
+              teacher: teacherId,
+              class_num: finalClass.data.id,
+              name: curr.section,
+            });
+          }
+        } else {
+          finalClass = await createClass({
+            number: curr.class,
+            teacher: teacherId,
+          });
+          finalSection = await createSection({
+            name: curr.section,
+            class_num: finalClass.data.id,
+            teacher: teacherId,
+          });
         }
-      )
+
+        return { class: finalClass, section: finalSection };
+      })
     );
 
     window.location.reload();
+  };
+
+  updateState = () => {
+    const data = this.props.data;
+    const currClasses = data && this.props.data.classes;
+    const currSections = data && this.props.data.sections;
+
+    const refactoredData =
+      currClasses &&
+      currSections &&
+      currClasses.map((c) => ({
+        class: c.number,
+        classId: c.id,
+        section: currSections.find((s) => s.class_num === c.id).name,
+        sectionId: currSections.find((s) => s.class_num === c.id).id,
+        isDeleted: false,
+      }));
+
+    this.setState({
+      name: this.props.data.name,
+      teacherId: this.props.data.teacher_id,
+      classList: refactoredData.map((curr, idx) =>
+        ClassRow(
+          idx,
+          curr,
+          this.state,
+          this.handleClass,
+          this.handleDeleteClass
+        )
+      ),
+      classSections: refactoredData,
+    });
   };
 
   render() {
@@ -178,6 +267,11 @@ class ModalDetails extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <React.Fragment>
+              {this.state.message && (
+                <Alert key="alert" variant="danger">
+                  {this.state.message}
+                </Alert>
+              )}
               <Form.Group controlId="Name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -214,7 +308,9 @@ class ModalDetails extends React.Component {
             </Button>
             <Button
               variant="primary"
-              onClick={this.handleAdd}
+              onClick={
+                this.props.isEditing ? this.handleUpdate : this.handleAdd
+              }
             >
               Submit
             </Button>
