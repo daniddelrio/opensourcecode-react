@@ -27,7 +27,7 @@ class HomePage extends React.Component {
           <Col>
             <div class="home-main">
               <h3>Do you want to view the <strong>teachers</strong>?</h3>
-              <Link to="/students">
+              <Link to="/teachers">
                 <Button variant="primary">
                   View Teacher Page
                 </Button>
